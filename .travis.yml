@@ -1,5 +1,1 @@
 language: c++
-
-before_script:
-  - cd src
-  - cmake .
