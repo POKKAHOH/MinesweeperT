@@ -14,6 +14,7 @@ public:
   int value();      //возвращает счетчик мин
   void setOpen();   //открывает ячейку
   bool isOpen();    //ячейка открыта?
+  bool isFlag();    //ячейка отмечена?
   void swapFlag();  //сапёр ошибается один раз, а сомневаться может долго;)
 
 // define brushes ;)
