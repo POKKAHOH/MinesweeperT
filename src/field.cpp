@@ -1,4 +1,4 @@
-#define NDEBUG
+#define DEBUG
 
 #include <iostream>
 #include "field.h"
@@ -78,7 +78,8 @@ void Field::openCell(int i, int j) {
   if (m_field[i][j]->isOpen()||m_field[i][j]->isFlag())
     return;
   if (m_field[i][j]->value()) {
-    m_field[i][j]->setOpen();  
+    m_field[i][j]->setOpen();
+    m_opened++;  
     return;
   }
   if (m_field[i][j]->isMine())
@@ -109,7 +110,7 @@ void Field::Play(){
          <<"             "<<endl<< "\e["<<(m_n+4)<<";0H";
     cin>>s;
 
-#ifdef DEBUG
+#ifdef ODEBUG
 m_isGameActive=false;
 openAll();
 #endif
@@ -128,7 +129,7 @@ openAll();
         continue;
       m_field[xCoord][yCoord]->swapFlag();
       if (isWin()) /*last mine*/ 
-        m_isGameActive = false;      
+        m_isGameActive = false;
       continue;
     }
     if (m_field[xCoord][yCoord]->isMine()&&(!(m_field[xCoord][yCoord]->isFlag()))) {
