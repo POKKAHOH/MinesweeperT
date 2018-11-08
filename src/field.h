@@ -20,7 +20,8 @@ protected:
   void openAll();                  // открывает всё поле
   bool isValidCoord(int i, int j); // i,j в поле?
   void openCell(int i, int j);     // открывает клетку
-  bool isWin();                   // проверяет выигрыш
+  bool isWin();                    // проверяет выигрыш
+  void setFlags();                  // ставим флаги победителю
 
   Cell* m_field[m_n][m_n];         // игровое поле
   bool m_isGameActive;             // состояние игрового поля
