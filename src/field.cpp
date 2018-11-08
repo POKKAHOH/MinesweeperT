@@ -127,6 +127,8 @@ openAll();
       if (m_field[xCoord][yCoord]->isOpen())
         continue;
       m_field[xCoord][yCoord]->swapFlag();
+      if (isWin()) /*last mine*/ 
+        m_isGameActive = false;      
       continue;
     }
     if (m_field[xCoord][yCoord]->isMine()&&(!(m_field[xCoord][yCoord]->isFlag()))) {
