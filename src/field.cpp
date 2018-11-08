@@ -1,3 +1,5 @@
+#define DEBUG
+
 #include <iostream>
 #include "field.h"
 #include "cell.h"
@@ -7,7 +9,7 @@ using namespace std;
 Field::Field(){
   m_isGameActive = true;
 // clear screen, hide cursor
-  cout << "\e[2J\e[?25l";
+  cout << "\e[2J\e[?25l\e[1;1H";
 // show header
   cout <<"  ";
   for (int i=0;i<m_n;i++){
@@ -27,7 +29,9 @@ Field::Field(){
    }
     cout<<endl;
   }
+#ifndef DEBUG
   srand (time(NULL));
+#endif
   for (int i = 0; i < m_mineNumber;) {
     Cell* p = m_field[rand() % m_n][rand() % m_n];
     if (p->isMine())
@@ -59,7 +63,7 @@ Field::~Field(){
    }
   }
 //go down & show cursor
-  cout << "\e[1;"<<m_n+3<<"H\e[?25h";
+  cout << "\e["<<m_n+7<<";1H\e[?25h";
 }
 
 bool Field::isValidCoord(int i, int j) {
@@ -101,6 +105,11 @@ void Field::Play(){
          << "Введите координаты клетки (А1 - открыть; А1* - отметить флажком): "
          << endl<<endl<<endl<< "\e["<<(m_n+4)<<";0H";
     cin>>s;
+
+#ifdef DEBUG
+m_isGameActive=false;
+openAll();
+#endif
     // переводим координаты в цифровой вид
     if ((s[0]>=65)&&(s[0]<=90)) 
       xCoord=(int) s[0]-65;        // большая буква
@@ -115,6 +124,7 @@ void Field::Play(){
       if (m_field[xCoord][yCoord]->isOpen())
         continue;
       m_field[xCoord][yCoord]->swapFlag();
+      continue;
     }
     if (m_field[xCoord][yCoord]->isMine()) {
       m_isGameActive = false;
