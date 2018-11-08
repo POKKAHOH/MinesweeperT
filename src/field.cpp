@@ -1,4 +1,4 @@
-#define DEBUG
+#define NDEBUG
 
 #include <iostream>
 #include "field.h"
@@ -75,10 +75,12 @@ bool Field::isWin() {
 }
 
 void Field::openCell(int i, int j) {
-  if (m_field[i][j]->isOpen())
+  if (m_field[i][j]->isOpen()||m_field[i][j]->isFlag())
     return;
-  if (m_field[i][j]->value())
+  if (m_field[i][j]->value()) {
+    m_field[i][j]->setOpen();  
     return;
+  }
   if (m_field[i][j]->isMine())
     return;
   m_field[i][j]->setOpen();
@@ -102,8 +104,9 @@ void Field::Play(){
   char s[4];
   while(m_isGameActive){
     cout << "\e["<<m_n+3<<";0H"
-         << "Введите координаты клетки (А1 - открыть; А1* - отметить флажком): "
-         << endl<<endl<<endl<< "\e["<<(m_n+4)<<";0H";
+         << "Введите координаты клетки (А1 - открыть; А1* - отметить флажком): "<< endl
+         <<"             "<<endl
+         <<"             "<<endl<< "\e["<<(m_n+4)<<";0H";
     cin>>s;
 
 #ifdef DEBUG
@@ -126,7 +129,7 @@ openAll();
       m_field[xCoord][yCoord]->swapFlag();
       continue;
     }
-    if (m_field[xCoord][yCoord]->isMine()) {
+    if (m_field[xCoord][yCoord]->isMine()&&(!(m_field[xCoord][yCoord]->isFlag()))) {
       m_isGameActive = false;
       openAll();
     }
