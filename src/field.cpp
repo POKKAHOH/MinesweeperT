@@ -1,4 +1,4 @@
-#define DEBUG
+#define NDEBUG
 
 #include <iostream>
 #include "field.h"
@@ -100,6 +100,15 @@ void Field::openAll() {
       m_field[i][j]->setOpen();
 }
 
+void Field::setFlags() {
+  for (int i = 0; i < m_n; ++i)
+    for (int j = 0; j < m_n; ++j)
+      if (m_field[i][j]->isMine()&&(!(m_field[i][j]->isFlag()))){
+        m_field[i][j]->swapFlag();
+        m_field[i][j]->setOpen();
+      }
+}
+
 void Field::Play(){
   int xCoord,yCoord;
   char s[4];
@@ -128,8 +137,8 @@ openAll();
       if (m_field[xCoord][yCoord]->isOpen())
         continue;
       m_field[xCoord][yCoord]->swapFlag();
-      if (isWin()) /*last mine*/ 
-        m_isGameActive = false;
+//      if (isWin()) /*last mine*/ 
+//        m_isGameActive = false;
       continue;
     }
     if (m_field[xCoord][yCoord]->isMine()&&(!(m_field[xCoord][yCoord]->isFlag()))) {
@@ -141,9 +150,11 @@ openAll();
     if (isWin()) 
       m_isGameActive = false;
   }
-  if (isWin()) 
+  if (isWin()) { 
     cout << "\e["<<m_n+6<<";0H"
          << "Вы победили! Поздравляю!!!";
+    setFlags();
+  } 
   else 
     cout << "\e["<<m_n+6<<";0H"
          << "Не огорчайтесь! Попробуйте ещё раз!!!";
