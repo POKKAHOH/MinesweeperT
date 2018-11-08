@@ -19,6 +19,7 @@ void Cell::setMine() { m_isMine = true; }
 bool Cell::isOpen() { return m_isOpen; }
 void Cell::setOpen() { m_isOpen = true; paint(); }
 
+bool Cell::isFlag() { return m_isFlag; }
 void Cell::swapFlag() { m_isFlag = !m_isFlag; paint(); }
 
 void Cell::paint() {
@@ -28,14 +29,23 @@ void Cell::paint() {
   Y=3*m_i+5; //5 char from left side to field, 3 char to cell
 //walk to ligth side...
   cout<<"\e["<<X<<";"<<(Y-1)<<"H"<<delim_l;
-  if (isOpen()) /*open field*/
-    if (isMine()) /*write red star*/
-      cout<<"\e[31m\e["<<X<<";"<<Y<<"H"<<mine_c<<"\e[0m";
+  if (m_isOpen) /*open field*/
+    if (m_isMine) /*write red star*/
+      if (m_isFlag) /*marked mine*/
+        cout<<"\e[34m\e["<<X<<";"<<Y<<"H"<<flag_c<<"\e[0m";         
+      else   /*non marked...*/
+        cout<<"\e[31m\e["<<X<<";"<<Y<<"H"<<mine_c<<"\e[0m";
     else /*opening field*/
-      if (value()) /*near mine*/
-        cout<<"\e[3"<<value()<<"m\e["<<X<<";"<<Y<<"H"<<value()<<"\e[0m";
+      if (m_value) /*near mine*/
+        if (m_isFlag) /*wrong flag*/         
+          cout<<"\e[44m\e[380m"<<flag_c<<"\e[0m";
+        else /*no flag*/
+          cout<<"\e[3"<<value()<<"m\e["<<X<<";"<<Y<<"H"<<value()<<"\e[0m";
       else /*empty field*/
-        cout<<"\e["<<X<<";"<<Y<<"H"<<empty_c;
+        if (m_isFlag) /*wrong flag*/         
+          cout<<"\e[44m\e[380m"<<flag_c<<"\e[0m";
+        else /*no flag*/
+          cout<<"\e["<<X<<";"<<Y<<"H"<<empty_c;
   else /*switch flag*/
     if (m_isFlag) /*write blue >*/
       cout<<"\e[34m\e["<<X<<";"<<Y<<"H"<<flag_c<<"\e[0m";
